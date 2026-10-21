@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+umask 077
+
+set -a
+source /etc/twenty-crm-backup/backup.env
+set +a
+
+: "${DEPLOYMENT_DIRECTORY:?}"
+: "${DATABASE_DIRECTORY:?}"
+: "${STAGING_DIRECTORY:?}"
+: "${PROXY_CONFIGURATION_FILE:?}"
+: "${BACKUP_HOST:?}"
+: "${RESTIC_CACHE_DIR:?}"
+
+exec 9>/run/lock/twenty-crm-backup.lock
+flock -n 9 || exit 0
+
+mkdir -p "$STAGING_DIRECTORY" "$RESTIC_CACHE_DIR"
+TEMPORARY_DUMP=$(mktemp "$STAGING_DIRECTORY/database.dump.XXXXXX")
+trap 'rm -f "$TEMPORARY_DUMP"' EXIT
+
+cd "$DEPLOYMENT_DIRECTORY"
+docker compose exec -T db pg_dump -U "${POSTGRES_USER:-postgres}" \
+  -d "${POSTGRES_DATABASE:-default}" --format=custom --no-owner --no-acl > "$TEMPORARY_DUMP"
+docker compose exec -T db pg_restore --list < "$TEMPORARY_DUMP" > /dev/null
+mv "$TEMPORARY_DUMP" "$STAGING_DIRECTORY/database.dump"
+
+restic backup --host "$BACKUP_HOST" --tag twenty-crm \
+  --exclude "$DATABASE_DIRECTORY" \
+  "$STAGING_DIRECTORY" \
+  "$DEPLOYMENT_DIRECTORY" \
+  "$PROXY_CONFIGURATION_FILE" \
+  /usr/local/sbin/twenty-crm-backup \
+  /etc/systemd/system/twenty-crm-backup.service \
+  /etc/systemd/system/twenty-crm-backup.timer
+
+restic forget --host "$BACKUP_HOST" --tag twenty-crm --group-by host,tags \
+  --keep-daily 30 --keep-weekly 8 --keep-monthly 12 --prune
+restic check
