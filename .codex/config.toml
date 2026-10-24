@@ -1,0 +1,6 @@
+[mcp_servers.hindsight]
+command = "sh"
+args = ["scripts/hindsight-with-1password.sh"]
+env_vars = ["HINDSIGHT_TWENTY_CRM_SELF_HOST_API_KEY"]
+startup_timeout_sec = 30
+tool_timeout_sec = 150

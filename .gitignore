@@ -71,3 +71,7 @@ screenshots/
 /.diag*.mjs
 /.compare*.mjs
 /.narrow*.mjs
+
+# Private MCP verification state and Python bytecode
+/.context/hindsight/
+/scripts/__pycache__/
