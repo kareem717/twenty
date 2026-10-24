@@ -3,5 +3,6 @@
   "default_bank": "twenty-crm-self-host",
   "grants": {
     "twenty-crm-self-host": "write"
-  }
+  },
+  "onepassword_environment_id": "e2z7shjjsyhlk7xpyoagakpurq"
 }

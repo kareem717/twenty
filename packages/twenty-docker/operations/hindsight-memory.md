@@ -40,12 +40,15 @@ explicitly supplied process variable.
 The preferred source is a separate **Twenty CRM Self Host** 1Password Environment
 containing `HINDSIGHT_TWENTY_CRM_SELF_HOST_API_KEY`. A private import file is staged
 on the owner's MacBook at `~/Downloads/1Password Imports/twenty-crm-self-host.env`.
-Import and worker read authorization remain pending. The thread's browser tools
+The owner reports import completed; Environment `e2z7shjjsyhlk7xpyoagakpurq` is recorded in the non-secret bank metadata.
+Authenticated value readback and worker read authorization remain pending. The thread's browser tools
 returned `Authentication required`; no runtime identity or Environment grant has
 been created for Twenty yet. Hermes and Scheduler Zero identities are not reused.
 
-After desktop import, track the non-secret Environment ID in
-`config/hindsight.op.environment` or set `TWENTY_OP_ENVIRONMENT_ID`. Provision a
+After worker authorization and readback succeed, activate the known Environment
+ID in `config/hindsight.op.environment`. An explicit `TWENTY_OP_ENVIRONMENT_ID`
+also selects 1Password immediately; the metadata ID alone preserves the working
+bootstrap until activation. Provision a
 separate worker service account with read access to only that Environment and
 store its token with the worker's host-encrypted credential mechanism. The
 launcher uses `repo-1password twenty` on enrolled workers, or the caller's own
