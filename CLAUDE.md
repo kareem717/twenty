@@ -58,3 +58,18 @@ npx nx run twenty-front:graphql:generate      # after GraphQL schema changes (--
 - **Entity file changes need a generated instance command**: `npx nx run twenty-server:database:migrate:generate --name <name> --type <fast|slow>` (slow = adds a data-backfill step).
 - A read-only Postgres MCP server is configured in `.mcp.json` for inspecting workspace data, metadata, and migration results. Writes go through the CLI commands above.
 - E2E login: click "Continue with Email" and use the prefilled credentials.
+
+## Engineering memory
+
+Use the [Hindsight memory skill](.agents/skills/hindsight-memory/SKILL.md)
+proactively for every substantial repository task. Recall relevant prior choices,
+known fixes and owner preferences before planning or changing code, and after a
+context handoff. Before the final handoff, retain new verified decisions, fixes
+and durable owner corrections with dates, source and verification. Do not wait
+for the user to ask or repeat instructions. Skip trivial edits and repetitive
+status; keep credentials and customer CRM records out of memory.
+
+Use only `twenty-crm-self-host`. Verify recalled claims against current source
+and deployment evidence. If memory is unavailable, report a safe status and
+continue independent work. Connection details and CLI fallback are in the
+[memory runbook](packages/twenty-docker/operations/hindsight-memory.md).
