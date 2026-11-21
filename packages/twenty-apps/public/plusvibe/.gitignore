@@ -1,0 +1,7 @@
+/node_modules
+/.twenty
+/dist
+/coverage
+.env*
+*.tsbuildinfo
+/.yarn
